@@ -19,7 +19,7 @@ struct Task
 
 ///TODO: CHANGE THE DAMN FILE NAME BEFORE YOU FORGET
 
-		std::ifstream inputStream("20XX/input/XX.txt");
+		std::ifstream inputStream("input20XX-00.txt");
 
 		if (!inputStream.is_open()) {
 			std::cerr << "Failed to open file!\n";

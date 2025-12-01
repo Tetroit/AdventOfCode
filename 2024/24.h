@@ -10,7 +10,7 @@
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
-#include "utils.h"
+#include "../utils.h"
 
 struct Task
 {
@@ -145,10 +145,10 @@ struct Task
 			gates[words[4]] = Gate{words[0], words[2], op, false, false};
 		}
 
-		swapWires("qjj" , "gjc");
-		swapWires("qsb" , "z39");
-		swapWires("z17" , "wmp");
-		swapWires("gvm" , "z26");
+		// swapWires("qjj" , "gjc");
+		// swapWires("qsb" , "z39");
+		// swapWires("z17" , "wmp");
+		// swapWires("gvm" , "z26");
 
 		//gjc,gvm,qjj,qsb,wmp,z17,z26,z39
 		auto sum = calculate(46);

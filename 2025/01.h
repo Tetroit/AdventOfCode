@@ -10,7 +10,7 @@
 #include <regex>
 #include <unordered_map>
 #include <unordered_set>
-#include "utils.h"
+#include "../utils.h"
 
 //The task to dial a number on a wheel from 0 to 99 and count 0s
 struct Task
@@ -27,7 +27,7 @@ struct Task
 	}
 	static void run() {
 
-		std::ifstream inputStream("input2025-01.txt");
+		std::ifstream inputStream("2025/input/01.txt");
 
 		if (!inputStream.is_open()) {
 			std::cerr << "Failed to open file!\n";
@@ -55,7 +55,7 @@ struct Task
 		std::cout << zeroStops << std::endl;
 	}
 	static void runPart2() {
-		std::ifstream inputStream("input2025-01.txt");
+		std::ifstream inputStream("2025/input/01.txt");
 
 		if (!inputStream.is_open()) {
 			std::cerr << "Failed to open file!\n";
