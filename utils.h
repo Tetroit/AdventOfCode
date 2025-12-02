@@ -47,6 +47,15 @@ public:
 	}
 
 	template<typename T>
+	static constexpr T powInt(T num, int power) {
+		T res = 1;
+		for (int i = 0; i < power; i++) {
+			res *= num;
+		}
+		return res;
+	}
+
+	template<typename T>
 	static constexpr void Log(const std::vector<T>& arr) {
 		for (const T& el : arr) {
 			std::cout << el << " ";
