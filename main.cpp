@@ -2,7 +2,7 @@
 
 //format: #include "YYYY/DD.h"
 
-#include "2025/07.h"
+#include "2025/08.h"
 
 int main() {
 	clock_t start = clock();

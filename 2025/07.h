@@ -12,7 +12,7 @@
 #include <unordered_set>
 #include "utils.h"
 
-//TODO: put a small description of the task
+//The "falling sand task" with timelines and splits
 struct Task
 {
 	static void run() {
