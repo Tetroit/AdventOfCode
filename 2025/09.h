@@ -12,7 +12,7 @@
 #include <unordered_set>
 #include "utils.h"
 
-//TODO: put a small description of the task
+//Task about finding largest rectangle in the zone
 struct Task
 {
 	enum Dir {
