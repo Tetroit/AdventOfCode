@@ -73,10 +73,11 @@ struct Task
 	}
 	static void run() {
 
-		std::ifstream inputStream("13.txt");
+		std::ifstream inputStream("2015\\input\\13.txt");
 
 		if (!inputStream.is_open()) {
 			std::cerr << "Failed to open file!\n";
+			return;
 		}
 
 		Graph relationships;
@@ -109,6 +110,7 @@ struct Task
 
 		if (!inputStream.is_open()) {
 			std::cerr << "Failed to open file!\n";
+			return;
 		}
 
 		Graph relationships;

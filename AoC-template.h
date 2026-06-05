@@ -23,6 +23,7 @@ struct Task
 
 		if (!inputStream.is_open()) {
 			std::cerr << "Failed to open file!\n";
+			return;
 		}
 
 		std::string line;
