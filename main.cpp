@@ -1,8 +1,9 @@
 ﻿//DON'T FORGET TO SET WORKING DIRECTORY TO THE MAIN ONE! (where all txts are)
 
-//format: #include "YYYY/DD.h"
+//Use C++20
 
-#include "2015/16.h"
+//format: #include "YYYY/DD.h"
+#include "2015/18.h"
 
 int main() {
 	clock_t start = clock();

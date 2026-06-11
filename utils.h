@@ -4,6 +4,7 @@
 #include <vector>
 
 class Utils {
+
 public:
 	static std::vector<std::string> split(const std::string& str, char sep)
 	{
@@ -86,7 +87,7 @@ public:
 		{3, {0,1}},
 	};
 
-	static std::vector<std::tuple<int, int, int>>::const_iterator UtilFindPlace(const std::vector<std::tuple<int, int, int>>& arr, int order) {
+	static std::vector<std::tuple<int, int, int>>::const_iterator UtilInsert(const std::vector<std::tuple<int, int, int>>& arr, int order) {
 		for ( int i=0; i<arr.size(); i++ ) {
 			if (order < std::get<0>(arr.at(i))) {
 				return arr.cbegin() + i;
@@ -100,13 +101,10 @@ public:
 		std::vector<std::tuple<int, int, int>> queue;
 
 		for (auto& [x,y] : starts) {
-			queue.emplace(UtilFindPlace(queue, weights[x][y]), weights[x][y], x, y);
+			queue.emplace(UtilInsert(queue, weights[x][y]), weights[x][y], x, y);
 		}
 		while (!queue.empty()) {
-			auto data = queue.begin();
-			int& score = std::get<0>(*data);
-			int& x = std::get<1>(*data);
-			int& y = std::get<2>(*data);
+			auto [score, x, y] = queue.front();
 			std::vector<std::tuple<int, int, int>> toAdd;
 
 			for (int i=0; i<4; i++) {
@@ -129,11 +127,11 @@ public:
 				}
 			}
 
-			queue.erase(data);
+			queue.erase(queue.begin());
 
 			for (auto& t : toAdd) {
 				int weight = std::get<0>(t);
-				queue.emplace(UtilFindPlace(queue, weight), t);
+				queue.emplace(UtilInsert(queue, weight), t);
 			}
 		}
 
@@ -161,4 +159,5 @@ public:
 		}
 		return result + min;
 	}
+
 };
