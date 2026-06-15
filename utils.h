@@ -37,6 +37,19 @@ public:
 		return res;
 	}
 
+	static std::vector<int> findAll(const std::string& str, const std::string& key) {
+		size_t it = 0;
+		std::vector<int> res;
+		while (it < str.length()) {
+			it = str.find(key, it);
+			if (it != std::string::npos) {
+				res.push_back(it);
+				it += key.length();
+			}
+		}
+		return res;
+	}
+
 	template<typename T>
 	static constexpr int digitsIn (T num) {
 		int res = 0;
