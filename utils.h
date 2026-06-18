@@ -3,8 +3,18 @@
 #include <string>
 #include <vector>
 
-class Utils {
+template <typename T>
+struct UnorderedSetHash {
+	size_t operator()(const std::unordered_set<T>& set) const {
+		size_t hash = 0;
+		for (auto& x : set) {
+			hash ^= x;
+		}
+		return hash;
+	}
+};
 
+class Utils {
 public:
 	static std::vector<std::string> split(const std::string& str, char sep)
 	{
