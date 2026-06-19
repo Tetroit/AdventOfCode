@@ -1,5 +1,6 @@
 #pragma once
 #include <array>
+#include <cassert>
 #include <cstddef>
 #include <functional>
 #include <iostream>
@@ -16,6 +17,18 @@ public:
 
     Grid() = default;
     ~Grid() = default;
+
+    template <typename... Args>
+    requires (sizeof...(Args) == X * Y)
+    Grid(Args&&... vals) {
+        std::array<T, X * Y> input{ static_cast<T>(vals)... };
+
+        for (std::size_t y = 0; y < height; ++y) {
+            for (std::size_t x = 0; x < width; ++x) {
+                grid[y][x] = input[y * width + x];
+            }
+        }
+    }
 
     template <std::size_t X1, std::size_t Y1, typename T1>
     requires std::same_as<T, T1>
@@ -58,17 +71,22 @@ public:
             grid[y][x] = convert(line[x]);
         }
     }
-    T get(int x, int y) {
-        return grid[y][x];
-    }
-    void set(int x, int y, T val) {
-        grid[y][x] = val;
-    }
+
     bool inRange(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) {
             return false;
         }
         return true;
+    }
+    T get(int x, int y) {
+        assert(inRange(x, y));
+        return grid[y][x];
+    }
+    void set(int x, int y, T val) {
+        grid[y][x] = val;
+    }
+    std::pair<int, int> clamp(int x, int y) {
+        return {std::clamp(x,0, (int)X-1) ,std::clamp(y,0, (int)Y-1)};
     }
     std::vector<std::pair<int,int>> getNeighbourCoords8(int x, int y) {
         std::vector<std::pair<int,int>> neighbours;
