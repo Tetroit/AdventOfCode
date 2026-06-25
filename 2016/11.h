@@ -439,8 +439,6 @@ struct Task
 		state.Add(5, false, 0);
 		state.Add(6, true, 0);
 		state.Add(6, false, 0);
-		state.Add(7, true, 0);
-		state.Add(7, false, 0);
 		int moves = RunCombosOpt(state);
 		std::cout << moves << '\n';
 	}
