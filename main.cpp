@@ -3,7 +3,7 @@
 //Use C++20
 
 //format: #include "YYYY/DD.h"
-#include "2016/11.h"
+#include "2016/12.h"
 
 int main() {
 	clock_t start = clock();
@@ -12,6 +12,7 @@ int main() {
 	clock_t task1 = clock();
 	double elapsed = (double) (task1 - start) / CLOCKS_PER_SEC;
 	printf("Task1 executed in: %.3f seconds\n\n", elapsed);
+	std::cout << std::endl;
 
 	task.runPart2();
 	clock_t task2 = clock();
