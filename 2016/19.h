@@ -95,4 +95,15 @@ struct Task
 	eliminating last bit can be done by taking floor in base2 and subtracting from size
 
 	dont forget to add 1 since we start from 1 and not 0
+
+
+
+	For part 2 we can rephrase problem to taking presents from every 2 out of 3 elves along the circle like
+	XXXXXXXXXXXX 1
+	X..X..X..X.. 2
+	X........X.. 3
+	so then we start eliminating starting from size/2 and offset
+	depending on whether we land right in the elf or in between (basically size%2 == 0)
+	for each cycle of elimination we are left with roughly size/3 elves
+	exact value can be checked with offset
 */

@@ -183,4 +183,11 @@ public:
 		return result + min;
 	}
 
+	static int FloorMod(int n, int mod) {
+		int res = n % mod;
+		if (res < 0) {
+			res += mod;
+		}
+		return res;
+	}
 };
