@@ -36,14 +36,14 @@ public:
         return {std::clamp(x,0, getWidth()-1) ,std::clamp(y,0, getHeight()-1)};
     }
 
-    virtual void print() {
-        for (int i=0; i<getHeight(); ++i) {
-            for (int j=0; j<getWidth(); ++j) {
-                std::cout << get(j,i);
-            }
-            std::cout << std::endl;
-        }
-    }
+    // virtual void print() {
+    //     for (int i=0; i<getHeight(); ++i) {
+    //         for (int j=0; j<getWidth(); ++j) {
+    //             std::cout << get(j,i);
+    //         }
+    //         std::cout << std::endl;
+    //     }
+    // }
     virtual void print(std::function<char(T)> font) {
         for (int i=0; i<getHeight(); ++i) {
             for (int j=0; j<getWidth(); ++j) {
@@ -317,5 +317,17 @@ public:
     }
     void set(int x, int y, T val) override {
         grid[y][x] = val;
+    }
+    void add(int x, int y, T val) {
+        if (getWidth() <= x || getHeight() <= y) {
+            resize(std::max(x+1, getWidth()), std::max(y+1, getHeight()));
+        }
+        grid[y][x] = val;
+    }
+    void resize(int x, int y) {
+        grid.resize(y);
+        for (auto& row : grid) {
+            row.resize(x);
+        }
     }
 };
