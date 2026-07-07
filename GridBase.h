@@ -7,6 +7,11 @@
 #include <iostream>
 #include <string>
 
+
+template <size_t x, size_t y, typename size>
+class Grid;
+template <typename size>
+class DynamicGrid;
 template <typename T>
 class GridBase {
 public:
@@ -142,7 +147,7 @@ public:
             }
         }
     }
-    void fillFromLine(int y, std::string line, std::function<T(char)> convert) {
+    virtual void fillFromLine(int y, std::string line, std::function<T(char)> convert) {
         for (int x = 0; x < line.length(); ++x) {
             set(x,y, convert(line[x]));
         }
@@ -157,6 +162,9 @@ public:
         weights.resize(getHeight());
         for (int y = 0; y < getHeight(); ++y) {
             weights[y].resize(getWidth());
+            for (int x = 0; x < getWidth(); ++x) {
+                weights[y][x] = isWall(get(x,y)) ? -1 : std::numeric_limits<T>::max();
+            }
         }
         std::vector<std::tuple<weight_t, int, int>> queue;
 
@@ -169,9 +177,13 @@ public:
         auto setWeight = [&](int x, int y, weight_t weight) -> void {
             weights[y][x] = weight;
         };
+        setWeight(startX, startY, getCost(startX, startY));
         queue.emplace_back(getCost(startX, startY), startX, startY);
         while (!queue.empty()) {
             auto [score, x, y] = queue.front();
+            if (x == endX && y == endY) {
+                return score - getWeight(startX, startY);
+            }
             std::vector<std::tuple<int, int, int>> toAdd;
 
             for (auto[nx, ny] : getNeighbourCoords4(x, y)) {
@@ -181,7 +193,7 @@ public:
 
                 int weight = score + getCost(nx, ny);
                 if (getWeight(nx, ny) > weight) {
-                    setWeight(nx, ny);
+                    setWeight(nx, ny, weight);
                     toAdd.emplace_back(weight, nx, ny);
                 }
             }
@@ -190,15 +202,25 @@ public:
 
             for (auto& t : toAdd) {
                 int weight = std::get<0>(t);
+                bool inserted = false;
                 for (auto it = queue.begin(); it<queue.end(); it++) {
-                    if (weight < std::get<0>(*it))
+                    if (weight < std::get<0>(*it)) {
                         queue.insert(it, t);
+                        inserted = true;
+                        break;
+                    }
+                }
+                if (!inserted) {
+                    queue.emplace_back(t);
                 }
             }
         }
 
-        return weights[endX][endY];
+        return -1;
     }
+    DynamicGrid<int> dijkstra(const int& startX, const int& startY,
+        std::function<int(T)> costFunc,
+        std::function<bool(T)> isWall);
 };
 
 template<typename T>
@@ -330,4 +352,72 @@ public:
             row.resize(x);
         }
     }
+
+    void fillFromLine(int y, std::string line, std::function<T(char)> convert) override {
+        resize(line.length(), std::max(y+1, getHeight()));
+        GridBase<T>::fillFromLine(y, line, convert);
+    }
 };
+
+template<typename T>
+DynamicGrid<int> GridBase<T>::dijkstra(const int &startX, const int &startY, std::function<int(T)> costFunc,
+    std::function<bool(T)> isWall) {
+
+    using weight_t = int;
+    // std::array<std::array<weight_t, width>, height> weights;
+    DynamicGrid<T> weights;
+    weights.resize(getWidth(), getHeight());
+    for (int y = 0; y < getHeight(); ++y) {
+        for (int x = 0; x < getWidth(); ++x) {
+            weights.set(x,y, isWall(get(x,y)) ? -1 : std::numeric_limits<T>::max());
+        }
+    }
+    std::vector<std::tuple<weight_t, int, int>> queue;
+
+    auto getCost = [&](int x, int y) -> int {
+        return costFunc(get(x,y));
+    };
+    auto getWeight = [&](int x, int y) -> int {
+        return weights.get(x,y);
+    };
+    auto setWeight = [&](int x, int y, weight_t weight) -> void {
+        weights.set(x,y,weight);
+    };
+    setWeight(startX, startY, getCost(startX, startY));
+    queue.emplace_back(getCost(startX, startY), startX, startY);
+    while (!queue.empty()) {
+        auto [score, x, y] = queue.front();
+        std::vector<std::tuple<int, int, int>> toAdd;
+
+        for (auto[nx, ny] : getNeighbourCoords4(x, y)) {
+
+            if (isWall(get(nx,ny)))
+                continue;
+
+            int weight = score + getCost(nx, ny);
+            if (getWeight(nx, ny) > weight) {
+                setWeight(nx, ny, weight);
+                toAdd.emplace_back(weight, nx, ny);
+            }
+        }
+
+        queue.erase(queue.begin());
+
+        for (auto& t : toAdd) {
+            int weight = std::get<0>(t);
+            bool inserted = false;
+            for (auto it = queue.begin(); it<queue.end(); it++) {
+                if (weight < std::get<0>(*it)) {
+                    queue.insert(it, t);
+                    inserted = true;
+                    break;
+                }
+            }
+            if (!inserted) {
+                queue.emplace_back(t);
+            }
+        }
+    }
+
+    return weights;
+}
