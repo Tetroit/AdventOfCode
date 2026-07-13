@@ -4,12 +4,14 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <vector>
 #include <chrono>
+#include <functional>
 #include <thread>
 #include <regex>
 #include <unordered_map>
 #include <unordered_set>
+#include <variant>
+#include <vector>
 #include "utils.h"
 
 //TODO: put a small description of the task

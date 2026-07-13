@@ -6,15 +6,19 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <deque>
+#include <functional>
 #include <thread>
 #include <regex>
 #include <unordered_map>
 #include <unordered_set>
+#include <variant>
+
 #include "utils.h"
 
 // assembly simulator with playing sounds
 
-using numT = uint64_t;
+using numT = int64_t;
 using Reg = std::unordered_map<char, numT>;
 struct ProgramContext {
 	int step = 0;
@@ -29,7 +33,7 @@ using Program = std::vector<std::function<void(Reg&, ProgramContext&)>>;
 struct Task
 {
 	static inline Program program;
-	static inline Reg reg;
+	static inline Reg g_reg;
 	static std::variant<numT, char> getRef(const std::string& raw) {
 		if (std::isdigit(raw[0]) || raw[0] == '-') {
 			return (numT)std::stoi(raw);
@@ -195,25 +199,27 @@ struct Task
 				if (std::holds_alternative<char>(param2)) {
 					cell = std::get<char>(param2);
 					program.emplace_back([cell, comp](Reg& reg, ProgramContext& context) {
-						if (comp(reg)) context.step += (int)reg[cell];
+						if (comp(reg))
+							context.step += (int)reg[cell];
 						else context.step++;
 					});
 				}
 				else if (std::holds_alternative<numT>(param2)) {
 					numT val = std::get<numT>(param2);
 					program.emplace_back([val, comp](Reg& reg, ProgramContext& context) {
-						if (comp(reg)) context.step += (int)val;
+						if (comp(reg))
+							context.step += (int)val;
 						else context.step++;
 					});
 				}
 			}
 		}
 		inputStream.close();
-		reg.clear();
+		g_reg.clear();
 		auto stack = std::make_shared<std::deque<numT>>();
 		ProgramContext ctx (0, stack, stack);
 		while (ctx.step >= 0 && ctx.step < program.size() && ctx.recover == 0) {
-			program[ctx.step](reg, ctx);
+			program[ctx.step](g_reg, ctx);
 		}
 		std::cout << ctx.recover << std::endl;
 	}
@@ -231,11 +237,15 @@ struct Task
 			while (ctx0.step >= 0 && ctx0.step < program.size() && !ctx0.locked) {
 				program[ctx0.step](reg0, ctx0);
 			}
+			ctx0.locked = true;
+
 			if (!ctx1.received->empty())
 				ctx1.locked = false;
 			while (ctx1.step >= 0 && ctx1.step < program.size() && !ctx1.locked) {
 				program[ctx1.step](reg1, ctx1);
 			}
+			ctx1.locked = true;
+
 			if (!ctx0.received->empty())
 				ctx0.locked = false;
 		}
