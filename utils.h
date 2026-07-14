@@ -103,12 +103,18 @@ public:
 	}
 
 
-	inline static std::unordered_map<int, std::pair<int, int>> UtilFacingVec {
-		{0, {1,0}},
-		{1, {0,-1}},
-		{2, {-1,0}},
-		{3, {0,1}},
+	inline static const std::vector<std::pair<int, int>> UtilFacingVec {
+		{1,0},
+		{0,-1},
+		{-1,0},
+		{0,1},
 	};
+	template<typename T>
+	static void MoveInDir(T& x, T& y, int dir) {
+		auto [dx, dy] = UtilFacingVec.at(dir);
+		x = x + dx;
+		y = y + dy;
+	}
 
 	static std::vector<std::tuple<int, int, int>>::const_iterator UtilInsert(const std::vector<std::tuple<int, int, int>>& arr, int order) {
 		for ( int i=0; i<arr.size(); i++ ) {

@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <functional>
 #include <iostream>
+#include <optional>
 #include <string>
 
 
@@ -14,6 +15,10 @@ template <typename size>
 class DynamicGrid;
 template <typename T>
 class GridBase {
+
+    static constexpr std::array<std::pair<int, int>, 4> dirMap {{
+        {1,0}, {0,-1}, {-1,0}, {0,1}
+    }};
 public:
     virtual ~GridBase() = default;
 
@@ -57,6 +62,25 @@ public:
             std::cout << std::endl;
         }
     }
+
+    virtual std::optional<T> getInDir(int x, int y, int dir) {
+        auto [dx, dy] = dirMap[dir & 0b11];
+        x += dx;
+        y += dy;
+        if (inRange(x, y)) return get(x,y);
+        return std::nullopt;
+    }
+
+    virtual bool moveInDir(int& x, int& y, int dir) {
+        auto [dx, dy] = dirMap[dir & 0b11];
+        x += dx;
+        y += dy;
+        if (inRange(x,y)) return true;
+        x -= dx;
+        y -= dy;
+        return false;
+    }
+
     virtual int countNeighbours8(int x, int y, std::function<bool(T)> pred) {
         int cnt = 0;
         for (int xi = x-1; xi <= x+1; ++xi) {
@@ -354,7 +378,7 @@ public:
     }
 
     void fillFromLine(int y, std::string line, std::function<T(char)> convert) override {
-        resize(line.length(), std::max(y+1, getHeight()));
+        resize( std::max((int)line.length(), getWidth()), std::max(y+1, getHeight()));
         GridBase<T>::fillFromLine(y, line, convert);
     }
 };
