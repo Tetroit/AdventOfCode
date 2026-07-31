@@ -62,6 +62,7 @@ public:
 
 	template<typename T>
 	static constexpr int digitsIn (T num) {
+		if (num == 0) return 1;
 		int res = 0;
 		while (num != 0) {
 			res++;
