@@ -1,4 +1,4 @@
-﻿//DON'T FORGET TO SET WORKING DIRECTORY TO THE MAIN ONE! (where all txts are)
+//DON'T FORGET TO SET WORKING DIRECTORY TO THE MAIN ONE! (where all txts are)
 
 //Use C++20
 
