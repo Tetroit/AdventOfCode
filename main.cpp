@@ -3,7 +3,7 @@
 //Use C++20
 
 //format: #include "YYYY/DD.h"
-#include "2018/21.h"
+#include "2018/22.h"
 
 int main() {
 	clock_t start = clock();

@@ -376,6 +376,21 @@ public:
             row.resize(x);
         }
     }
+    void expand(int x, int y) {
+        bool resizedY = false;
+        int prevSize = getHeight();
+        if (y > grid.size()) {
+            grid.resize(y);
+            resizedY = true;
+        }
+        if (getHeight() == 0) return;
+        if (x > grid[0].size()) for (auto& row : grid) {row.resize(x);}
+        else if (resizedY) {
+            for (int i=prevSize; i<getHeight(); ++i) {
+                grid[i].resize(getWidth());
+            }
+        }
+    }
 
     void fillFromLine(int y, std::string line, std::function<T(char)> convert) override {
         resize( std::max((int)line.length(), getWidth()), std::max(y+1, getHeight()));
