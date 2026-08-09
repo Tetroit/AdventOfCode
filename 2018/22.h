@@ -16,7 +16,7 @@
 #include <vector>
 
 #include "GridBase.h"
-#include "ivec2.h"
+#include "vec.h"
 #include "utils.h"
 
 //generating cave and pathfinding with switching tools

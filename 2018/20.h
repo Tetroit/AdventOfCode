@@ -14,7 +14,7 @@
 #include <variant>
 #include <vector>
 
-#include "ivec2.h"
+#include "vec.h"
 #include "utils.h"
 
 //walking in directions from regex
