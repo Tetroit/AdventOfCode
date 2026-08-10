@@ -49,6 +49,77 @@ struct vec {
         }
     }
 };
+
+template <typename  T>
+struct vec<4, T> {
+    union {
+        struct {
+            T x, y, z, w;
+        };
+
+        std::array<T, 4> data;
+    };
+
+    vec() : x{}, y{}, z{} {}
+
+    vec(T x, T y, T z, T w)
+        : x(x), y(y), z(z), w(w) {}
+
+    T& operator[](size_t index) {
+        return data[index];
+    }
+
+    const T& operator[](size_t index) const {
+        return data[index];
+    }
+
+    bool operator==(const vec& other) const {
+        return data == other.data;
+    }
+
+    bool operator!=(const vec& other) const {
+        return data != other.data;
+    }
+
+    vec operator+(const vec& other) const {
+        return {
+            x + other.x,
+            y + other.y,
+            z + other.z,
+            w + other.w
+        };
+    }
+
+    vec operator-(const vec& other) const {
+        return {
+            x - other.x,
+            y - other.y,
+            z - other.z,
+            w - other.w
+        };
+    }
+
+    vec& operator+=(const vec& other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        w += other.w;
+        return *this;
+    }
+
+    vec& operator-=(const vec& other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        w -= other.w;
+        return *this;
+    }
+
+    T len() const {
+        return abs(x) + abs(y) + abs(z) + abs(w);
+    }
+};
+
 template<typename T>
 struct vec<3, T> {
     union {
@@ -190,12 +261,16 @@ struct vecHash {
     }
 };
 
+using ivec4 = vec<4, int>;
 using ivec3 = vec<3, int>;
 using ivec2 = vec<2, int>;
+using llvec4 = vec<4, long long>;
 using llvec3 = vec<3, long long>;
 using llvec2 = vec<2, long long>;
 
+using ivec4hash = vecHash<4, int>;
 using ivec3hash = vecHash<3, int>;
 using ivec2hash = vecHash<2, int>;
+using llvec4hash = vecHash<4, long long>;
 using llvec3hash = vecHash<3, long long>;
 using llvec2hash = vecHash<2, long long>;
