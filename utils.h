@@ -103,6 +103,19 @@ public:
 		return false;
 	}
 
+	template<typename T>
+	static int gcd(T a, T b) {
+		while (a != 0 && b != 0) {
+			if (a > b) {
+				a -= b;
+			}
+			else {
+				b -= a;
+			}
+		}
+		if (a == 0) {return b;}
+		return a;
+	}
 
 	inline static const std::vector<std::pair<int, int>> UtilFacingVec {
 		{1,0},

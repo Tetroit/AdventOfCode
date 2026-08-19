@@ -21,16 +21,32 @@ struct vec {
     vec<size, T> operator+(const vec<size, T>& other) const {
         vec<size, T> result;
         for (size_t i = 0; i < size; i++) {
-            result[i] = data[i] + other[i];
+            result.data[i] = data[i] + other[i];
         }
         return result;
     }
     vec<size, T> operator-(const vec<size, T>& other) const {
         vec<size, T> result;
         for (size_t i = 0; i < size; i++) {
-            result[i] = data[i] - other[i];
+            result.data[i] = data[i] - other[i];
         }
         return result;
+    }
+
+    vec operator* (const int val) {
+        vec res;
+        for (size_t i = 0; i < size; i++) {
+            res.data[i] = data[i] * val;
+        }
+        return res;
+    }
+
+    vec operator/ (const int& val) {
+        vec res;
+        for (size_t i = 0; i < size; i++) {
+            res.data[i] = data[i] / val;
+        }
+        return res;
     }
     void operator+=(const vec<size, T>& other) {
         for (size_t i = 0; i < size; i++) {
@@ -42,12 +58,31 @@ struct vec {
             data[i] -= other[i];
         }
     }
+    void operator*=(const int& val) {
+        for (size_t i = 0; i < size; i++) {
+            data[i] *= val;
+        }
+    }
+    void operator/=(const int& val) {
+        for (size_t i = 0; i < size; i++) {
+            data[i] /= val;
+        }
+    }
     void len() {
         T res = 0;
         for (size_t i = 0; i < size; i++) {
-            res += abs(data[i]);
+            res += ::abs(data[i]);
         }
     }
+
+    vec abs() {
+        int res = 0;
+        for (auto& i : data) {
+            res += ::abs(i);
+        }
+        return res;
+    }
+
 };
 
 template <typename  T>
@@ -99,24 +134,57 @@ struct vec<4, T> {
         };
     }
 
-    vec& operator+=(const vec& other) {
+    vec operator*(const int& other) const {
+        return{
+            x * other,
+            y * other,
+            z * other,
+            w * other
+        };
+    }
+
+    vec operator/(const int& other) const {
+        return{
+            x / other,
+            y / other,
+            z / other,
+            w / other
+        };
+    }
+
+    void operator+=(const vec& other) {
         x += other.x;
         y += other.y;
         z += other.z;
         w += other.w;
-        return *this;
     }
 
-    vec& operator-=(const vec& other) {
+    void operator-=(const vec& other) {
         x -= other.x;
         y -= other.y;
         z -= other.z;
         w -= other.w;
-        return *this;
+    }
+
+    void operator*=(const int& other) {
+        x *= other;
+        y *= other;
+        z *= other;
+        w *= other;
+    }
+
+    void operator/=(const int& other) {
+        x /= other;
+        y /= other;
+        z /= other;
+        w /= other;
     }
 
     T len() const {
-        return abs(x) + abs(y) + abs(z) + abs(w);
+        return ::abs(x) + ::abs(y) + ::abs(z) + ::abs(w);
+    }
+    vec abs() {
+        return {::abs(x), ::abs(y), ::abs(z), ::abs(w)};
     }
 };
 
@@ -167,22 +235,49 @@ struct vec<3, T> {
         };
     }
 
-    vec& operator+=(const vec& other) {
+    vec operator*(const int& other) const {
+        return {
+            x * other,
+            y * other,
+            z * other
+        };
+    }
+
+    vec operator/(const int& other) const {
+        return {
+            x / other,
+            y / other,
+            z / other
+        };
+    }
+    void operator+=(const vec& other) {
         x += other.x;
         y += other.y;
         z += other.z;
-        return *this;
     }
 
-    vec& operator-=(const vec& other) {
+    void operator-=(const vec& other) {
         x -= other.x;
         y -= other.y;
         z -= other.z;
-        return *this;
+    }
+
+    void operator*=(const int& other) {
+        x *= other;
+        y *= other;
+        z *= other;
+    }
+    void operator/=(const int& other) {
+        x /= other;
+        y /= other;
+        z /= other;
     }
 
     T len() const {
-        return abs(x) + abs(y) + abs(z);
+        return ::abs(x) + ::abs(y) + ::abs(z);
+    }
+    vec abs() {
+        return {::abs(x), ::abs(y), ::abs(z)};
     }
 };
 
@@ -231,20 +326,44 @@ struct vec<2, T> {
         };
     }
 
-    vec& operator+=(const vec& other) {
-        x += other.x;
-        y += other.y;
-        return *this;
+    vec operator*(const int& other) const {
+        return {
+            x * other,
+            y * other
+        };
+    }
+    vec operator/(const int& other) const {
+        return {
+            x / other,
+            y / other
+        };
     }
 
-    vec& operator-=(const vec& other) {
+    void operator+=(const vec& other) {
+        x += other.x;
+        y += other.y;
+    }
+
+    void operator-=(const vec& other) {
         x -= other.x;
         y -= other.y;
-        return *this;
+    }
+
+    void operator*=(const int& other) {
+        x *= other;
+        y *= other;
+    }
+    void operator/=(const int& other) {
+        x /= other;
+        y /= other;
     }
 
     T len() const {
-        return abs(x) + abs(y);
+        return ::abs(x) + ::abs(y);
+    }
+
+    vec abs() {
+        return {::abs(x), ::abs(y)};
     }
 };
 
