@@ -104,17 +104,24 @@ public:
 	}
 
 	template<typename T>
-	static int gcd(T a, T b) {
+	static T gcd(T a, T b) {
+		if (a < 0) a = -a;
+		if (b < 0) b = -b;
 		while (a != 0 && b != 0) {
 			if (a > b) {
-				a -= b;
+				a %= b;
 			}
 			else {
-				b -= a;
+				b %= a;
 			}
 		}
 		if (a == 0) {return b;}
 		return a;
+	}
+
+	template<typename T>
+	static T lcm(T a, T b) {
+		return a * b / gcd(a, b);
 	}
 
 	inline static const std::vector<std::pair<int, int>> UtilFacingVec {

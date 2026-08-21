@@ -32,6 +32,13 @@ struct vec {
         }
         return result;
     }
+    vec<size, T> operator-() const {
+        vec<size, T> result;
+        for (size_t i = 0; i < size; i++) {
+            result.data[i] = -data[i];
+        }
+        return result;
+    }
 
     vec operator* (const int val) {
         vec res;
@@ -134,6 +141,10 @@ struct vec<4, T> {
         };
     }
 
+    vec operator- () const {
+        return {-x, -y, -z, -w};
+    }
+
     vec operator*(const int& other) const {
         return{
             x * other,
@@ -234,6 +245,9 @@ struct vec<3, T> {
             z - other.z
         };
     }
+    vec operator- () const {
+        return {-x, -y, -z};
+    }
 
     vec operator*(const int& other) const {
         return {
@@ -324,6 +338,9 @@ struct vec<2, T> {
             x - other.x,
             y - other.y
         };
+    }
+    vec operator- () const {
+        return {-x, -y};
     }
 
     vec operator*(const int& other) const {
