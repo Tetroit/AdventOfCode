@@ -9,6 +9,15 @@
 #include <string>
 
 
+template<class T>
+struct DefaultConvert {
+    constexpr auto operator()(T&& value) const
+        -> decltype(std::forward<T>(value))
+    {
+        return std::forward<T>(value);
+    }
+};
+
 template <size_t x, size_t y, typename size>
 class Grid;
 template <typename size>
@@ -59,7 +68,10 @@ public:
             for (int j=0; j<getWidth(); ++j) {
                 std::cout << font(get(j, i));
             }
-            std::cout << std::endl;
+            if (i == getHeight()-1)
+                std::cout << std::endl;
+            else
+                std::cout << '\n';
         }
     }
 
@@ -344,6 +356,7 @@ public:
     }
 };
 
+
 template <typename T>
 class DynamicGrid final : public GridBase<T> {
     std::vector<std::vector<T>> grid;
@@ -396,6 +409,28 @@ public:
         resize( std::max((int)line.length(), getWidth()), std::max(y+1, getHeight()));
         GridBase<T>::fillFromLine(y, line, convert);
     }
+
+    template <typename Vec, typename VecHash, typename Convert = DefaultConvert<std::pair<int,int>>>
+    void fillFromCoordList(std::unordered_map<Vec, T, VecHash> src, Convert convert) {
+        int minX = std::numeric_limits<int>::max();
+        int minY = std::numeric_limits<int>::max();
+        int maxX = std::numeric_limits<int>::min();
+        int maxY = std::numeric_limits<int>::min();
+
+        for (auto& [vec, val] : src) {
+            std::pair<int, int> coord = convert(vec);
+            if (coord.first < minX) minX = coord.first;
+            if (coord.second < minY) minY = coord.second;
+            if (coord.first > maxX) maxX = coord.first;
+            if (coord.second > maxY) maxY = coord.second;
+        }
+        resize(maxX - minX + 1, maxY - minY + 1);
+        this->clear(T{});
+        for (auto& [vec, val] : src) {
+            std::pair<int, int> coord = convert(vec);
+            set(coord.first - minX, coord.second - minY, val);
+        }
+    }
 };
 
 template<typename T>
@@ -422,8 +457,8 @@ DynamicGrid<int> GridBase<T>::dijkstra(const int &startX, const int &startY, std
     auto setWeight = [&](int x, int y, weight_t weight) -> void {
         weights.set(x,y,weight);
     };
-    setWeight(startX, startY, getCost(startX, startY));
-    queue.emplace_back(getCost(startX, startY), startX, startY);
+    setWeight(startX, startY, 0);
+    queue.emplace_back(0, startX, startY);
     while (!queue.empty()) {
         auto [score, x, y] = queue.front();
         std::vector<std::tuple<int, int, int>> toAdd;

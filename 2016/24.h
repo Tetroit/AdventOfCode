@@ -54,8 +54,8 @@ struct Task
 					[](int _){return 1;}, [](int x){return x<0;});
 			for (int j=i+1; j<points.size(); j++) {
 				//I can definitely check distances to all other points in one dijkstra dispatch but im lazy haha
-				adjMat.add(i, j, weights.get(points[j].first, points[j].second) - 1);
-				adjMat.add(j, i, weights.get(points[j].first, points[j].second) - 1);
+				adjMat.add(i, j, weights.get(points[j].first, points[j].second));
+				adjMat.add(j, i, weights.get(points[j].first, points[j].second));
 			}
 		}
 		std::vector<int> order;
