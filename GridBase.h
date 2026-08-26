@@ -439,11 +439,11 @@ DynamicGrid<int> GridBase<T>::dijkstra(const int &startX, const int &startY, std
 
     using weight_t = int;
     // std::array<std::array<weight_t, width>, height> weights;
-    DynamicGrid<T> weights;
+    DynamicGrid<weight_t> weights;
     weights.resize(getWidth(), getHeight());
     for (int y = 0; y < getHeight(); ++y) {
         for (int x = 0; x < getWidth(); ++x) {
-            weights.set(x,y, isWall(get(x,y)) ? -1 : std::numeric_limits<T>::max());
+            weights.set(x,y, isWall(get(x,y)) ? -1 : std::numeric_limits<weight_t>::max());
         }
     }
     std::vector<std::tuple<weight_t, int, int>> queue;
