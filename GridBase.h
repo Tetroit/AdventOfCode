@@ -213,12 +213,12 @@ public:
         auto setWeight = [&](int x, int y, weight_t weight) -> void {
             weights[y][x] = weight;
         };
-        setWeight(startX, startY, getCost(startX, startY));
-        queue.emplace_back(getCost(startX, startY), startX, startY);
+        setWeight(startX, startY, 0);
+        queue.emplace_back(0, startX, startY);
         while (!queue.empty()) {
             auto [score, x, y] = queue.front();
             if (x == endX && y == endY) {
-                return score - getWeight(startX, startY);
+                return score;
             }
             std::vector<std::tuple<int, int, int>> toAdd;
 
