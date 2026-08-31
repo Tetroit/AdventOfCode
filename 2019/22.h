@@ -58,7 +58,6 @@ struct GeneralOperation {
 		while (pow) {
 			if (pow & 1)
 				res += base;
-
 			base += base;
 			pow >>= 1;
 		}
