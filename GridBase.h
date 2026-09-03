@@ -93,6 +93,17 @@ public:
         return false;
     }
 
+    virtual std::optional<std::pair<int,int>> raycast(int x, int y, int dx, int dy, std::function<bool(T)> pred) {
+        int xi = x;
+        int yi = y;
+        while (inRange(xi, yi)) {
+            if (pred(get(xi,yi))) return std::make_pair(xi,yi);
+            xi += dx;
+            yi += dy;
+        }
+        return std::nullopt;
+    }
+
     virtual int countNeighbours8(int x, int y, std::function<bool(T)> pred) {
         int cnt = 0;
         for (int xi = x-1; xi <= x+1; ++xi) {
@@ -186,6 +197,15 @@ public:
     virtual void fillFromLine(int y, std::string line, std::function<T(char)> convert) {
         for (int x = 0; x < line.length(); ++x) {
             set(x,y, convert(line[x]));
+        }
+    }
+
+    virtual void fillFromStream(std::istream& stream, std::function<T(char)> convert) {
+        std::string line;
+        int ry = 0;
+        while (std::getline(stream, line)) {
+            fillFromLine(ry, line, convert);
+            ry++;
         }
     }
     int dijkstra(const int& startX, const int& startY, const int& endX, const int& endY,
