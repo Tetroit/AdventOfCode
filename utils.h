@@ -218,4 +218,28 @@ public:
 		}
 		return res;
 	}
+
+	template <typename T>
+	static std::vector<T> minkovskySum (const std::vector<T>& a, const std::vector<T>& b) {
+		std::vector<T> result;
+		for (const T& ax : a) {
+			for (const T& ay : b) {
+				result.push_back(ax + ay);
+			}
+		}
+		std::sort(result.begin(), result.end());
+		result.erase(std::unique(result.begin(), result.end()), result.end());
+		return result;
+	}
+
+	template <typename T>
+	static std::unordered_set<T> minkovskySum (const std::unordered_set<T>& a, const std::unordered_set<T>& b) {
+		std::unordered_set<T> result;
+		for (const T& ax : a) {
+			for (const T& ay : b) {
+				result.insert(ax + ay);
+			}
+		}
+		return result;
+	}
 };
