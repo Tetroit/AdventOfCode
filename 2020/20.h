@@ -328,6 +328,8 @@ struct Task
 	v                   v
 	*<7---------------3>*
 
+	transform: rotate THEN flip around X axis
+
 	THIS IS HORRIBLE ABSOLUTELY HORRIBLE
 	THE GOD DAMN ORIENTATIONS
 	MAKING GENERAL CONVENTION IS ALREADY A PROBLEM... WHAT ABOUT APPLICATIONS??
