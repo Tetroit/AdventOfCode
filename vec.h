@@ -391,6 +391,7 @@ struct vecHash {
         std::hash<T> hasher;
         size_t result = 0;
         for (int i=0; i < size; i++) {
+            result <<= 1;
             result ^= hasher(val[i]);
         }
         return result;
