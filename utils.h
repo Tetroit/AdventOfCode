@@ -242,4 +242,11 @@ public:
 		}
 		return result;
 	}
+
+	template <std::unsigned_integral T>
+	constexpr static T bitmask(int n) {
+		if (n == 0) return 0;
+		return n == sizeof(T) * 8 ? std::numeric_limits<T>::max() : (T{1} << n) - 1;
+	}
+
 };

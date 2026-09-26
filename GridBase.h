@@ -274,6 +274,73 @@ public:
 
         return -1;
     }
+    int aStar(const int& startX, const int& startY, const int& endX, const int& endY,
+        std::function<int(T)> costFunc,
+        std::function<bool(T)> isWall,
+        std::function<int(int,int)> hFunc) {
+
+        using weight_t = int;
+        // std::array<std::array<weight_t, width>, height> weights;
+        std::vector<std::vector<weight_t>> weights;
+        weights.resize(getHeight());
+        for (int y = 0; y < getHeight(); ++y) {
+            weights[y].resize(getWidth());
+            for (int x = 0; x < getWidth(); ++x) {
+                weights[y][x] = isWall(get(x,y)) ? -1 : std::numeric_limits<T>::max();
+            }
+        }
+        std::vector<std::tuple<weight_t, int, int>> queue;
+
+        auto getCost = [&](int x, int y) -> int {
+            return costFunc(get(x,y));
+        };
+        auto getWeight = [&](int x, int y) -> int {
+            return weights[y][x];
+        };
+        auto setWeight = [&](int x, int y, weight_t weight) -> void {
+            weights[y][x] = weight + hFunc(x,y);
+        };
+        setWeight(startX, startY, 0);
+        queue.emplace_back(0, startX, startY);
+        while (!queue.empty()) {
+            auto [score, x, y] = queue.front();
+            if (x == endX && y == endY) {
+                return score;
+            }
+            std::vector<std::tuple<int, int, int>> toAdd;
+
+            for (auto[nx, ny] : getNeighbourCoords4(x, y)) {
+
+                if (isWall(get(nx,ny)))
+                    continue;
+
+                int weight = score + getCost(nx, ny);
+                if (getWeight(nx, ny) > weight) {
+                    setWeight(nx, ny, weight);
+                    toAdd.emplace_back(weight, nx, ny);
+                }
+            }
+
+            queue.erase(queue.begin());
+
+            for (auto& t : toAdd) {
+                int weight = std::get<0>(t);
+                bool inserted = false;
+                for (auto it = queue.begin(); it<queue.end(); it++) {
+                    if (weight < std::get<0>(*it)) {
+                        queue.insert(it, t);
+                        inserted = true;
+                        break;
+                    }
+                }
+                if (!inserted) {
+                    queue.emplace_back(t);
+                }
+            }
+        }
+
+        return -1;
+    }
     DynamicGrid<int> dijkstra(const int& startX, const int& startY,
         std::function<int(T)> costFunc,
         std::function<bool(T)> isWall);
