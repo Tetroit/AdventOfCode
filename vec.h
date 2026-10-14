@@ -47,11 +47,25 @@ struct vec {
         }
         return res;
     }
+    vec operator* (const vec val) {
+        vec res;
+        for (size_t i = 0; i < size; i++) {
+            res.data[i] = data[i] * val[i];
+        }
+        return res;
+    }
 
-    vec operator/ (const int& val) {
+    vec operator / (const int val) {
         vec res;
         for (size_t i = 0; i < size; i++) {
             res.data[i] = data[i] / val;
+        }
+        return res;
+    }
+    vec operator / (const vec val) {
+        vec res;
+        for (size_t i = 0; i < size; i++) {
+            res.data[i] = data[i] / val[i];
         }
         return res;
     }
@@ -70,9 +84,19 @@ struct vec {
             data[i] *= val;
         }
     }
+    void operator*=(const vec& val) {
+        for (size_t i = 0; i < size; i++) {
+            data[i] *= val[i];
+        }
+    }
     void operator/=(const int& val) {
         for (size_t i = 0; i < size; i++) {
             data[i] /= val;
+        }
+    }
+    void operator/=(const vec& val) {
+        for (size_t i = 0; i < size; i++) {
+            data[i] /= val[i];
         }
     }
     void len() {
@@ -153,6 +177,14 @@ struct vec<4, T> {
             w * other
         };
     }
+    vec operator*(const vec& other) const {
+        return {
+            x - other.x,
+            y - other.y,
+            z - other.z,
+            w - other.w
+        };
+    }
 
     vec operator/(const int& other) const {
         return{
@@ -160,6 +192,14 @@ struct vec<4, T> {
             y / other,
             z / other,
             w / other
+        };
+    }
+    vec operator/(const vec& other) const {
+        return {
+            x / other.x,
+            y / other.y,
+            z / other.z,
+            w / other.w
         };
     }
 
@@ -183,12 +223,24 @@ struct vec<4, T> {
         z *= other;
         w *= other;
     }
+    void operator*=(const vec& other) {
+        x *= other.x;
+        y *= other.y;
+        z *= other.z;
+        w *= other.w;
+    }
 
     void operator/=(const int& other) {
         x /= other;
         y /= other;
         z /= other;
         w /= other;
+    }
+    void operator/=(const vec& other) {
+        x /= other.x;
+        y /= other.y;
+        z /= other.z;
+        w /= other.w;
     }
 
     T len() const {
@@ -256,12 +308,26 @@ struct vec<3, T> {
             z * other
         };
     }
+    vec operator*(const vec& other) const {
+        return {
+            x * other.x,
+            y * other.y,
+            z * other.z
+        };
+    }
 
     vec operator/(const int& other) const {
         return {
             x / other,
             y / other,
             z / other
+        };
+    }
+    vec operator/(const vec& other) const {
+        return {
+            x / other.x,
+            y / other.y,
+            z / other.z
         };
     }
     void operator+=(const vec& other) {
@@ -281,10 +347,20 @@ struct vec<3, T> {
         y *= other;
         z *= other;
     }
+    void operator*=(const vec& other) {
+        x *= other.x;
+        y *= other.y;
+        z *= other.z;
+    }
     void operator/=(const int& other) {
         x /= other;
         y /= other;
         z /= other;
+    }
+    void operator/=(const vec& other) {
+        x /= other.x;
+        y /= other.y;
+        z /= other.z;
     }
 
     T len() const {
@@ -349,10 +425,22 @@ struct vec<2, T> {
             y * other
         };
     }
+    vec operator*(const vec& other) const {
+        return {
+            x * other.x,
+            y * other.y
+        };
+    }
     vec operator/(const int& other) const {
         return {
             x / other,
             y / other
+        };
+    }
+    vec operator/(const vec& other) const {
+        return {
+            x / other.x,
+            y / other.y
         };
     }
 
@@ -370,9 +458,18 @@ struct vec<2, T> {
         x *= other;
         y *= other;
     }
+    void operator*=(const vec& other) {
+        x *= other.x;
+        y *= other.y;
+    }
+
     void operator/=(const int& other) {
         x /= other;
         y /= other;
+    }
+    void operator/=(const vec& other) {
+        x /= other.x;
+        y /= other.y;
     }
 
     T len() const {
