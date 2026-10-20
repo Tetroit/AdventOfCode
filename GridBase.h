@@ -7,6 +7,7 @@
 #include <iostream>
 #include <optional>
 #include <string>
+#include <unordered_set>
 
 
 template<class T>
@@ -516,6 +517,49 @@ public:
         for (auto& [vec, val] : src) {
             std::pair<int, int> coord = convert(vec);
             set(coord.first - minX, coord.second - minY, val);
+        }
+    }
+
+    template <typename Vec, typename VecHash, typename Convert = DefaultConvert<std::pair<int,int>>>
+    void fillFromCoordList(std::unordered_set<Vec, VecHash> src, T on, T off, Convert convert) {
+        int minX = std::numeric_limits<int>::max();
+        int minY = std::numeric_limits<int>::max();
+        int maxX = std::numeric_limits<int>::min();
+        int maxY = std::numeric_limits<int>::min();
+
+        for (auto& vec : src) {
+            std::pair<int, int> coord = convert(vec);
+            if (coord.first < minX) minX = coord.first;
+            if (coord.second < minY) minY = coord.second;
+            if (coord.first > maxX) maxX = coord.first;
+            if (coord.second > maxY) maxY = coord.second;
+        }
+        resize(maxX - minX + 1, maxY - minY + 1);
+        this->clear(off);
+        for (auto& vec : src) {
+            std::pair<int, int> coord = convert(vec);
+            set(coord.first - minX, coord.second - minY, on);
+        }
+    }
+    template <std::ranges::input_range R, typename Convert = DefaultConvert<std::pair<int,int>>>
+    void fillFromCoordList(R&& src, T on, T off, Convert convert) {
+        int minX = std::numeric_limits<int>::max();
+        int minY = std::numeric_limits<int>::max();
+        int maxX = std::numeric_limits<int>::min();
+        int maxY = std::numeric_limits<int>::min();
+
+        for (auto& vec : src) {
+            std::pair<int, int> coord = convert(vec);
+            if (coord.first < minX) minX = coord.first;
+            if (coord.second < minY) minY = coord.second;
+            if (coord.first > maxX) maxX = coord.first;
+            if (coord.second > maxY) maxY = coord.second;
+        }
+        resize(maxX - minX + 1, maxY - minY + 1);
+        this->clear(off);
+        for (auto& vec : src) {
+            std::pair<int, int> coord = convert(vec);
+            set(coord.first - minX, coord.second - minY, on);
         }
     }
 };

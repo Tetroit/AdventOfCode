@@ -201,9 +201,10 @@ public:
 		return weights[endX][endY];
 	}
 
-	static int Loop (int num, int min, int max) {
-		int range = max - min + 1;
-		int result = (num - min) % range;
+	template<typename T=int>
+	static T Loop (T num, T min, T max) {
+		T range = max - min + 1;
+		T result = (num - min) % range;
 		if (result < 0) {
 			result += range;
 		}
