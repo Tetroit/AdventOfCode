@@ -250,4 +250,80 @@ public:
 		return n == sizeof(T) * 8 ? std::numeric_limits<T>::max() : (T{1} << n) - 1;
 	}
 
+	template <std::unsigned_integral T>
+	static std::pair<std::make_signed_t<T>, std::make_signed_t<T>>
+	extendedEuclid(T a, T b) {
+		using S = std::make_signed_t<T>;
+
+		S old_r = static_cast<S>(a), r = static_cast<S>(b);
+		S old_s = 1, s = 0;
+		S old_t = 0, t = 1;
+
+		while (r != 0) {
+			S q = old_r / r;
+
+			S temp = old_r - q * r;
+			old_r = r;
+			r = temp;
+
+			temp = old_s - q * s;
+			old_s = s;
+			s = temp;
+
+			temp = old_t - q * t;
+			old_t = t;
+			t = temp;
+		}
+
+		if (old_r < 0) {
+			old_s = -old_s;
+			old_t = -old_t;
+		}
+
+		return {old_s, old_t};
+	}
+	//ax mod m = 1
+	template <std::unsigned_integral T>
+	static T inverseMod(T a, T m) {
+		using S = std::make_signed_t<T>;
+		S sm = static_cast<S>(m);
+		S sa = static_cast<S>(a);
+		auto [x, y] = extendedEuclid(a,m);
+		if (sa * x + sm * y != 1) return -1;
+		return static_cast<T>((x % sm + sm) % sm);
+	}
+	template <std::unsigned_integral T>
+	static std::optional<std::pair<T, T>> chineseSolver(std::pair<T, T> a, std::pair<T, T> b) {
+		std::pair<T, T> result;
+		result.second = lcm(a.second, b.second);
+
+		T d = gcd(a.second, b.second);
+		T diff = b.first - a.first;
+		if (diff % d != 0) return std::nullopt;
+
+		T diffd = diff / d;
+		T ad = a.second / d;
+		T bd = b.second / d;
+
+		T inv = inverseMod(ad, bd);
+		if (bd != 1 && inv == T(-1)) return std::nullopt;
+
+		T k = bd == 1 ? 0 : FloorMod(inv * diffd, bd);
+		result.first = FloorMod(a.first + k * a.second, result.second);
+
+		return result;
+	}
+
+	template <std::unsigned_integral T>
+	static std::optional<std::pair<T,T>> chineseSolver(const std::vector<std::pair<T, T>>& b) {
+		if (b.empty()) return std::nullopt;
+		if (b.size() == 1) return b[0];
+		std::pair<T, T> result = b.front();
+		for (int i=1; i<b.size(); i++) {
+			auto op = chineseSolver(result, b[i]);
+			if (!op.has_value()) return std::nullopt;
+			result = op.value();
+		}
+		return result;
+	}
 };
